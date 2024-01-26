@@ -100,7 +100,6 @@ def ask_openai(prompt, conversation):
     response = requests.post(url, json=payload, headers=headers)
     return response.json()['choices'][0]['message']['content'].strip()
 
-
 # Build response:
 
 async def respond(message, content):
