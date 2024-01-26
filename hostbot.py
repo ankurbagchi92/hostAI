@@ -32,7 +32,6 @@ Messages to you will include the name of the user sending them. Here is a snapsh
 check_response_needed_prompt = f'''You are a discord bot called {botname}. Your job is to talk to users and help answer questions. Figure out whether you should reply at the end of the following conversation. You should reply only if a user is talking to you or asking questions to you. There might be multiple users in the conversation. You might be referred to by your name, or as dost, friend, bot, ai etc. You are polite and do not need to get the last word in a conversation.
 
 Answer Yes if you think that the last message was directed to you, or the user wants a response from you. Answer No if you are not being talked to, or the user does not want a response from you. Here is the conversation history:
-
 '''
 
 async def check_response_needed(conversation):
@@ -118,7 +117,7 @@ async def get_quoted_message (message):
 
         try:
             referenced_message = await message.channel.fetch_message(message.reference.message_id)
-            print (f'referenced: {referenced_message.content}')
+            # print (f'referenced: {referenced_message.content}')
             return msgs.clean_message(referenced_message)
         except discord.NotFound:
             # Message not found or inaccessible
@@ -145,15 +144,13 @@ async def on_message(message):
 
     content = msgs.clean_message (message)
 
-    print (content)
-
     if message.author != client.user:
 
         #On reply
 
         if message.reference and message.reference.resolved:
             if message.reference.resolved.author == client.user:
-                print ("SYSTEM MESSAGE: I got replied to!")
+                # print ("SYSTEM MESSAGE: I got replied to!")
                 quote = await get_quoted_message(message)
                 content = f'(Replying to {quote}) ' + content
                 await respond (message, content)
@@ -161,7 +158,7 @@ async def on_message(message):
         #On mention
 
         elif client.user.mentioned_in(message):
-            print ("SYSTEM MESSAGE: I got mentioned!")
+            # print ("SYSTEM MESSAGE: I got mentioned!")
             await respond (message, content)
 
         #On heat (bot is actively being talked to)
@@ -172,7 +169,7 @@ async def on_message(message):
                 conversation = msgs.get_conversation(message.channel.id)
                 reply = await check_response_needed (conversation) + content
                 if 'yes' in reply.lower():
-                    print ("SYSTEM MESSAGE: I'm being talked to!")
+                    # print ("SYSTEM MESSAGE: I'm being talked to!")
                     await respond(message, content)
 
     msgs.save_content(message, content)
