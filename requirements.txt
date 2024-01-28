@@ -2,7 +2,7 @@ discord.py==2.3.2
 requests==2.31.0
 python-dotenv==1.0.0
 langchain
-langchain_community
+langchain-community
 transformers
 sentence-transformers
 faiss-cpu
