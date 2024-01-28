@@ -5,7 +5,6 @@ from langchain.vectorstores import FAISS
 from transformers import AutoTokenizer, AutoModelForQuestionAnswering
 from transformers import AutoTokenizer, pipeline
 from langchain import HuggingFacePipeline
-from langchain.chains import RetrievalQA
 import re
 import os
 
