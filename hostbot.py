@@ -93,20 +93,11 @@ async def on_message(message):
 # Retrieve token from the .env file
 load_dotenv()
 
-# async def init():
-#     await database.init()
-#     await rag.init()
-#     return
-#
-# asyncio.run(init())
-
 async def init():
-    loop = asyncio.get_event_loop()
-    await database.init(loop)
+    await database.init()
     await rag.init()
     return
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(init())
+asyncio.run(init())
 
 client.run(os.getenv('DISCORD'))

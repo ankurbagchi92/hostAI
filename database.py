@@ -12,15 +12,15 @@ load_dotenv()
 SUPABASE_URL = "postgres://postgres.aifjbnzzxdwhzlpvzzes:ZOSMFJVMKSDVS43J5N43@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres" # Replace with your Supabase URL
 SUPABASE_KEY = os.getenv('SUPABASE')  # Replace with your Supabase Key
 
-async def init(loop):
-    await _connect(SUPABASE_URL, loop)
+async def init():
+    await _connect(SUPABASE_URL)
 
 # Connection pool
 _connection_pool = None
 
-async def _connect(url, loop=None):
+async def _connect(url):
     global _connection_pool
-    _connection_pool = await asyncpg.create_pool(url, loop=loop)
+    _connection_pool = await asyncpg.create_pool(url)
     await _initialize()
 
 async def _initialize():
