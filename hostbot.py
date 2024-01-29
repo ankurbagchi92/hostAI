@@ -4,7 +4,9 @@ import requests
 import message_utils as msgs
 import bot_config as bot
 import ai_api as ai
-import rag as rag
+import rag
+import asyncio
+import database
 
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -14,7 +16,6 @@ intents = discord.Intents.all()
 intents.messages = True
 intents.guilds = True
 client = discord.Client(intents=intents)
-
 
 channel_cooldowns = {}
 
@@ -87,9 +88,25 @@ async def on_message(message):
                     async with message.channel.typing():
                         await build_response(message, content)
 
-    msgs.save_content(message, content)
+    await msgs.save_content(message, content)
 
 # Retrieve token from the .env file
 load_dotenv()
-rag.init()
+
+# async def init():
+#     await database.init()
+#     await rag.init()
+#     return
+#
+# asyncio.run(init())
+
+async def init():
+    loop = asyncio.get_event_loop()
+    await database.init(loop)
+    await rag.init()
+    return
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(init())
+
 client.run(os.getenv('DISCORD'))

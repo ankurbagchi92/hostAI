@@ -1,6 +1,8 @@
 import re
 import discord
 import rag
+import database
+import asyncio
 
 # Clean up messages:
 
@@ -42,7 +44,12 @@ async def get_quoted_message (message):
 # Dictionary to store the last 10 messages for each channel
 channel_messages = {}
 
-def save_content(message, content):
+async def store_content (server_id, filecontent):
+    await database.add_log(server_id, filecontent)
+    rag.add_to_db(filecontent, server_id)
+
+
+async def save_content(message, content):
 
     channel_id = message.channel.id
     server_id = message.guild.id # IDEA:
@@ -57,10 +64,8 @@ def save_content(message, content):
         channel_messages[channel_id].pop(0)
 
     filecontent = f'[Channel: {channel_id}] ' + content + "\n"
-    with open(f'./memory/{server_id}.txt', 'a') as file: # change to server_id to prevent OVERLAP
-        file.write(filecontent)
 
-    rag.add_to_db(filecontent, server_id)
+    await store_content(server_id, filecontent)
 
     return content
 
