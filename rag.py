@@ -57,18 +57,6 @@ async def init():
         db[server_id] = FAISS.from_documents(data, embeddings)
         print (f"Loaded db from: {server_id}")
 
-
-    # for filename in os.listdir("./memory"):
-    #     if filename.endswith(".txt"):
-    #         file_path = os.path.join("./memory", filename)
-    #         # Apply the TextLoader function on the file
-    #         loader = TextLoader(file_path)
-    #         docs = loader.load()
-    #         data = text_splitter.split_documents(docs)
-    #         db[os.path.splitext(filename)[0]] = FAISS.from_documents(data, embeddings)
-    #         print (f"Loaded db from: {os.path.splitext(filename)}")
-
-
     # try:
     #     db = FAISS.load_local("faiss_index", embeddings)
     #     print("Loading local db")

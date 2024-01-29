@@ -26,11 +26,6 @@ def check_response_needed(conversation):
 def converse(message, prompt, conversation):
     context = rag.lookup (prompt, message.guild.id)
     systemprompt = bot.sp_converse + conversation + f'\n\nHere is some relevant information from past conversations:\n{context}';
-    # print ("-------\nSYSTEMPROMPT:")
-    # print ("-------")
-    # print (systemprompt)
-    # print ("-------")
-    # print (f'PROMPT:\n {prompt}')
     return ai.ask(systemprompt, prompt)
 
 # Build response:
@@ -96,8 +91,23 @@ load_dotenv()
 async def init():
     await database.init()
     await rag.init()
-    return
 
-asyncio.run(init())
+async def close():
+    await database._close()
 
-client.run(os.getenv('DISCORD'))
+loop = asyncio.get_event_loop()
+loop.run_until_complete(init())
+
+try:
+    client.run(os.getenv('DISCORD'))
+finally:
+    loop.run_until_complete(close())
+    loop.close()
+
+# async def init():
+#     await database.init()
+#     await rag.init()
+#     client.run(os.getenv('DISCORD'))
+#     await database._close()
+#
+# asyncio.get_event_loop().run_until_complete(init())

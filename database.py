@@ -12,18 +12,17 @@ load_dotenv()
 SUPABASE_URL = "postgres://postgres.aifjbnzzxdwhzlpvzzes:ZOSMFJVMKSDVS43J5N43@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres" # Replace with your Supabase URL
 SUPABASE_KEY = os.getenv('SUPABASE')  # Replace with your Supabase Key
 
-async def init():
-    await _connect(SUPABASE_URL)
 
 # Connection pool
 _connection_pool = None
 
-async def _connect(url):
-    global _connection_pool
-    _connection_pool = await asyncpg.create_pool(url)
-    await _initialize()
+async def init():
+    await _initialize(SUPABASE_URL)
+
 
 async def _initialize():
+    global _connection_pool
+    _connection_pool = await asyncpg.create_pool(SUPABASE_URL)
     async with _connection_pool.acquire() as conn:
         await conn.execute('''
             CREATE TABLE IF NOT EXISTS discord_logs (
@@ -35,6 +34,7 @@ async def _initialize():
         ''')
 
 async def add_log(server_id, message):
+    global _connection_pool
     if _connection_pool is None:
         raise Exception("Database connection not established")
 
@@ -44,6 +44,7 @@ async def add_log(server_id, message):
         ''', server_id, message)
 
 async def get_logs(server_id):
+    global _connection_pool
     if _connection_pool is None:
         raise Exception("Database connection not established")
 
@@ -53,6 +54,7 @@ async def get_logs(server_id):
             ''', server_id)
 
 async def get_server_ids():
+    global _connection_pool
     if _connection_pool is None:
         raise Exception("Database connection not established")
 
