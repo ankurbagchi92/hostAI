@@ -16,7 +16,6 @@ embeddings = None
 
 def create_embeddings():
     global embeddings
-    print("Initializing embeddings")
 
     # Define the path to the pre-trained model you want to use
     modelPath = "sentence-transformers/all-MiniLM-l6-v2"
@@ -55,6 +54,9 @@ async def init():
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
 
     servers = await database.get_server_ids()
+
+    print (f"Loading databases...")
+
 
     for server_id in servers:
         # Apply the TextLoader function on the file

@@ -15,7 +15,17 @@ from dotenv import load_dotenv
 intents = discord.Intents.all()
 intents.messages = True
 intents.guilds = True
-client = discord.Client(intents=intents)
+#client = discord.Client(intents=intents)
+
+class MyClient(discord.Client):
+    async def  setup_hook(self) -> None:
+        await database.init()
+        await rag.init()
+    async def close(self):
+        await database._close()
+        
+client = MyClient(intents=intents)
+
 
 channel_cooldowns = {}
 
@@ -42,7 +52,7 @@ async def build_response(message, content):
 # Set the confirmation message when the bot is ready
 @client.event
 async def on_ready():
-    botname = client.user.display_name
+    bot.name = client.user.display_name
     print(f'Logged in as {bot.name}')
 
 @client.event
@@ -88,14 +98,8 @@ async def on_message(message):
 # Retrieve token from the .env file
 load_dotenv()
 
-class MyClient(discord.Client):
-    async def  setup_hook(self) -> None:
-        await database.init()
-        await rag.init()
-    async def close(self):
-        await database._close()
 
-client = MyClient(intents=intents)
+
 client.run(os.getenv('DISCORD'))
 
 

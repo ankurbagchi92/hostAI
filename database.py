@@ -32,6 +32,7 @@ async def _initialize():
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         ''')
+    print ("Database connection established")
 
 async def add_log(server_id, message):
     global _connection_pool
