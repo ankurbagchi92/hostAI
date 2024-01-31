@@ -23,7 +23,7 @@ class MyClient(discord.Client):
         await rag.init()
     async def close(self):
         await database._close()
-        
+
 client = MyClient(intents=intents)
 
 
@@ -65,6 +65,8 @@ async def on_message(message):
 
     content = msgs.clean_message (message, client.user.id, bot.name)
 
+    await msgs.save_content(message, content)
+
     if message.author != client.user:
 
         #On reply
@@ -93,7 +95,7 @@ async def on_message(message):
                     async with message.channel.typing():
                         await build_response(message, content)
 
-    await msgs.save_content(message, content)
+
 
 # Retrieve token from the .env file
 load_dotenv()

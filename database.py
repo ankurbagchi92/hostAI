@@ -9,7 +9,7 @@ load_dotenv()
 
 #"user=postgres.aifjbnzzxdwhzlpvzzes password=ZOSMFJVMKSDVS43J5N43 host=aws-0-ap-southeast-1.pooler.supabase.com port=6543 database=postgres"
 
-SUPABASE_URL = "postgres://postgres.aifjbnzzxdwhzlpvzzes:ZOSMFJVMKSDVS43J5N43@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres" # Replace with your Supabase URL
+SUPABASE_URL = "postgres://postgres.aifjbnzzxdwhzlpvzzes:ZOSMFJVMKSDVS43J5N43@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres" # Replace with your Supabase URL
 SUPABASE_KEY = os.getenv('SUPABASE')  # Replace with your Supabase Key
 
 
@@ -42,7 +42,7 @@ async def add_log(server_id, message):
     async with _connection_pool.acquire() as conn:
         await conn.execute('''
             INSERT INTO discord_logs (server_id, message) VALUES ($1, $2)
-        ''', server_id, message)
+        ''', str(server_id), message)
 
 async def get_logs(server_id):
     global _connection_pool
@@ -52,7 +52,7 @@ async def get_logs(server_id):
     async with _connection_pool.acquire() as conn:
             return await conn.fetch('''
                 SELECT message FROM discord_logs WHERE server_id = $1 ORDER BY timestamp ASC
-            ''', server_id)
+            ''', str(server_id))
 
 async def get_server_ids():
     global _connection_pool
