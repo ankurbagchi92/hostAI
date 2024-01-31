@@ -88,21 +88,17 @@ async def on_message(message):
 # Retrieve token from the .env file
 load_dotenv()
 
-async def init():
-    await database.init()
-    await rag.init()
+class MyClient(discord.Client):
+    async def  setup_hook(self) -> None:
+        await database.init()
+        await rag.init()
+    async def close(self):
+        await database._close()
 
-async def close():
-    await database._close()
+client = MyClient(intents=intents)
+client.run(os.getenv('DISCORD'))
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(init())
 
-try:
-    client.run(os.getenv('DISCORD'))
-finally:
-    loop.run_until_complete(close())
-    loop.close()
 
 # async def init():
 #     await database.init()

@@ -17,7 +17,7 @@ SUPABASE_KEY = os.getenv('SUPABASE')  # Replace with your Supabase Key
 _connection_pool = None
 
 async def init():
-    await _initialize(SUPABASE_URL)
+    await _initialize()
 
 
 async def _initialize():

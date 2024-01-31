@@ -1,5 +1,7 @@
 from langchain_community.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.schema.document import Document
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from transformers import AutoTokenizer, AutoModelForQuestionAnswering
@@ -34,6 +36,12 @@ def create_embeddings():
 
     print("Embeddings initialized")
 
+def get_text_chunks(text):
+    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
+    docs = [Document(page_content=x) for x in text_splitter.split_text(text)]
+    return docs
+
+
 async def init():
 
     global db
@@ -50,10 +58,8 @@ async def init():
 
     for server_id in servers:
         # Apply the TextLoader function on the file
-        server_log = database.get_logs(server_id)
-        loader = TextLoader(server_log)
-        docs = loader.load()
-        data = text_splitter.split_documents(docs)
+        server_log = await database.get_logs(server_id)
+        data = get_text_chunks(str(server_log))
         db[server_id] = FAISS.from_documents(data, embeddings)
         print (f"Loaded db from: {server_id}")
 
