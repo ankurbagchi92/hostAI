@@ -17,6 +17,8 @@ intents.messages = True
 intents.guilds = True
 #client = discord.Client(intents=intents)
 
+load_dotenv()
+
 class MyClient(discord.Client):
     async def  setup_hook(self) -> None:
         await database.init()
@@ -98,18 +100,7 @@ async def on_message(message):
 
 
 # Retrieve token from the .env file
-load_dotenv()
 
 
 
 client.run(os.getenv('DISCORD'))
-
-
-
-# async def init():
-#     await database.init()
-#     await rag.init()
-#     client.run(os.getenv('DISCORD'))
-#     await database._close()
-#
-# asyncio.get_event_loop().run_until_complete(init())
